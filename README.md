@@ -6,3 +6,5 @@ Make API gateway which can handle localhost going offline by using RabbitMQ queu
 - `remote` is running on the API server
 
 RabbitMQ Shovel forwards requests from `local` to `remote` RabbitMQ.
+
+Use `dockerhub` to push demo images to Docker Hub.

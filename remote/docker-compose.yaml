@@ -10,6 +10,11 @@ services:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
     restart: unless-stopped
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:5672"]
+        interval: 5s
+        timeout: 10s
+        retries: 10
   consumer:
     image: evgenyarbatov/rabbitmq-consumer
     container_name: "rabbitmq-consumer"
@@ -20,20 +25,16 @@ services:
       - default
     restart: unless-stopped
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
   server:
     image: evgenyarbatov/api-server
     container_name: "api-server"
     ports:
-      - 9090:9090 
-    environment:
-        - AMQP_URL=${AMQP_URL}
+      - 9090:9090
     networks:
       - default
     restart: unless-stopped
-    depends_on:
-      - rabbitmq
-      - consumer
 
 networks:
   default:
