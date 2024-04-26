@@ -1,26 +1,8 @@
 # local-api-gateway
 
-Make API gateway which can handle localhost going offline
+Make API gateway which can handle localhost going offline by using RabbitMQ queue:
 
-## Run
+- `local` runs on the host which makes API calls
+- `remote` is running on the API server
 
-Start:
-
-```
-docker compose up
-```
-
-## Debugging
-
-List queues:
-
-```
-docker exec -it rabbitmq rabbitmqctl list_queues
-```
-
-Update gateway code:
-
-```
-docker compose rm -f gateway
-docker compose pull gateway
-```
+RabbitMQ Shovel forwards requests from `local` to `remote` RabbitMQ.

@@ -1,15 +1,15 @@
 variable "image_name" {
-  default = "api-gateway"
+  type = string
 }
 
 variable "source_path" {
-  default = "../gateway"
+  type = string
 }
 
 variable "base_repository_url" {
-  default     = "evgenyarbatov"
+  default = "evgenyarbatov"
 }
 
 variable "tag" {
-  default     = "latest"
+  default = "latest"
 }
