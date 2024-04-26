@@ -4,22 +4,10 @@ resource "aws_instance" "api-server" {
   key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.api-server-sec-gr.id]
 
-  provisioner "file" {
-    source      = "../docker-compose.yaml"
-    destination = "/app"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "cd /app",
-      "docker-compose up",
-    ]
-  }
-
   user_data = templatefile(
     "init-script.tftpl",
     {
-      compose = file("${path.module}/../docker-compose.yaml")
+      compose = file("${path.module}/../docker-compose.yaml"),
       env = file("${path.module}/../.env")
     }
   )
