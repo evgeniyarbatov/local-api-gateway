@@ -1,0 +1,17 @@
+services:
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: "rabbitmq"
+    ports:
+      - 5672:5672  # RabbitMQ default port
+      - 15672:15672 # RabbitMQ management UI port
+    networks:
+      - rabbitmq
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    restart: unless-stopped
+
+networks:
+  rabbitmq:
+    driver: bridge
