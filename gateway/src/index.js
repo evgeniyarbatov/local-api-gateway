@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const amqp = require('amqplib');
 const bodyParser = require('body-parser');
@@ -13,7 +15,8 @@ async function sendMessage(
   params,
 ) {
   try {
-    const connection = await amqp.connect('amqp://localhost');
+    const amqpUrl = process.env.AMQP_URL 
+    const connection = await amqp.connect(amqpUrl);
     const channel = await connection.createChannel();
 
     await channel.assertQueue(api, { durable: false });
