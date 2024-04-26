@@ -7,26 +7,28 @@ const apis = [
   'log',
 ];
 
-async function startConsumers(apis) {
-  try {
-      const amqpUrl = process.env.AMQP_URL || 'amqp://localhost'
-      const connection = await amqp.connect(amqpUrl);
-      const channel = await connection.createChannel();
+const amqpUrl = process.env.AMQP_URL || 'amqp://localhost'
+amqp.connect(amqpUrl, function(error0, connection) {
+    if (error0) {
+        throw error0;
+    }
+    connection.createChannel(function(error1, channel) {
+        if (error1) {
+            throw error1;
+        }
 
-      for (const api of apis) {
-          await channel.assertQueue(api, { durable: true });
-          console.log(`Waiting for messages in ${api} queue.`);
+        for (const api of apis) {
+          channel.assertQueue(api, {
+              durable: false
+          });
 
-          channel.consume(api, (msg) => {
-            console.log(`Received from ${api}:`, msg.content.toString());
+          console.log("Waiting for messages in %s.", api);
+
+          channel.consume(api, function(msg) {
+              console.log("%s received %s", api, msg.content.toString());
           }, {
               noAck: true
           });
-      }
-  } catch (error) {
-      console.error("Failed to connect or consume:", error);
-      process.exit(1);
-  }
-}
-
-startConsumers(apis);
+        }
+    });
+});
