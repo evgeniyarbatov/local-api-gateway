@@ -1,9 +1,10 @@
 services:
   rabbitmq:
-    image: rabbitmq:latest
+    image: rabbitmq:3-management
     container_name: "rabbitmq-remote"
     ports:
       - 5672:5672
+      - 15672:15672
     networks:
       - default
     volumes:
@@ -11,10 +12,10 @@ services:
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
     restart: unless-stopped
     healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:5672"]
-        interval: 5s
-        timeout: 10s
-        retries: 10
+        test: rabbitmq-diagnostics -q ping
+        interval: 1s
+        timeout: 3s
+        retries: 30
   consumer:
     image: evgenyarbatov/rabbitmq-consumer
     container_name: "rabbitmq-consumer"
