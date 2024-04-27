@@ -8,6 +8,8 @@ const apis = [
 ];
 
 const amqpUrl = process.env.AMQP_URL || 'amqp://localhost'
+const serverUrl = process.env.SERVER_URL || 'http://localhost:9090'
+
 amqp.connect(amqpUrl, function(error0, connection) {
     if (error0) {
         throw error0;
@@ -25,7 +27,19 @@ amqp.connect(amqpUrl, function(error0, connection) {
           console.log("Waiting for messages in %s.", api);
 
           channel.consume(api, function(msg) {
-              console.log("%s received %s", api, msg.content.toString());
+            console.log("%s received %s", api, msg.content.toString());
+
+            const url = serverUrl + '/' + api;
+            const data = JSON.parse(msg.content.toString());
+
+            axios.post(url, data)
+              .then(response => {
+                  console.log('Success', url, response.data);
+              })
+              .catch(error => {
+                  console.error('Error during API call', error);
+              });
+
           }, {
               noAck: true
           });
