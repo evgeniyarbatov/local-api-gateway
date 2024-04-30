@@ -12,12 +12,17 @@ const serverUrl = process.env.SERVER_URL || 'http://localhost:9090'
 
 amqp.connect(amqpUrl, function(error0, connection) {
     if (error0) {
+        console.log("Failed to connect to %s. Error: %s", amqpUrl, error0);
         throw error0;
     }
+    console.log("Connected to %s", amqpUrl);
+
     connection.createChannel(function(error1, channel) {
         if (error1) {
+            console.log("Failed to create channel to %s. Error: %s", channel, error1);
             throw error1;
         }
+        console.log("Created channel %s", channel);
 
         for (const api of apis) {
           channel.assertQueue(api, {

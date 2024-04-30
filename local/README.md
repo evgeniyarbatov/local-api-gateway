@@ -11,7 +11,7 @@ Example:
 curl --location 'localhost:8080/api' \
 --header 'Content-Type: application/json' \
 --data '{
-    "api": "another-api",
+    "api": "log",
     "params": {
         "x": 2,
         "y": 3
@@ -25,10 +25,30 @@ curl --location 'localhost:8080/api' \
 docker compose up
 ```
 
-## List RabbitMQ queues
+## RabbitMQ
+
+Enable shovel:
 
 ```
-docker exec -it rabbitmq rabbitmqctl list_queues
+docker exec -it rabbitmq-local rabbitmq-plugins enable rabbitmq_shovel rabbitmq_shovel_management
+```
+
+Configure shovel:
+
+```
+docker exec -it rabbitmq-local \
+rabbitmqctl set_parameter shovel log-shovel \
+'{
+  "src-protocol": "amqp091",
+  "src-uri": "amqp://",
+  "src-queue": "log",
+  "dest-protocol": "amqp091",
+  "dest-uri": "amqp://47.128.145.103",
+  "dest-queue": "log",
+  "dest-queue-args": {
+    "x-queue-type": "quorum"
+  }
+}'
 ```
 
 ## Update gateway code

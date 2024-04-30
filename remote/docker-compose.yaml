@@ -1,6 +1,6 @@
 services:
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:latest
     container_name: "rabbitmq-remote"
     ports:
       - 5672:5672
