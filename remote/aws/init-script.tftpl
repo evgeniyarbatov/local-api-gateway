@@ -2,15 +2,7 @@
 
 hostnamectl set-hostname api-server
 
-apt-get update -y
-apt-get upgrade -y
-
 curl -sSL https://get.docker.com/ | sh
-
-apt-get install net-tools -y
-
-systemctl start docker
-systemctl enable docker
 
 cat > /home/ubuntu/docker-compose.yaml <<EOF
 ${compose}
