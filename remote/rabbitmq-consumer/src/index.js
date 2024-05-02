@@ -3,13 +3,9 @@ const axios = require('axios');
 
 const amqp = require('amqplib/callback_api');
 
-const apis = [
-  'purchase', 
-  'log',
-];
-
 const amqpUrl = process.env.AMQP_URL || 'amqp://localhost'
 const serverUrl = process.env.SERVER_URL || 'http://localhost:9090'
+const queueName = process.env.QUEUE_NAME || 'api'
 
 amqp.connect(amqpUrl, function(error0, connection) {
     if (error0) {
@@ -23,32 +19,30 @@ amqp.connect(amqpUrl, function(error0, connection) {
             console.log("Failed to create channel to %s. Error: %s", channel, error1);
             throw error1;
         }
-        console.log("Created channel");
 
-        for (const api of apis) {
-          channel.assertQueue(api, {
-              durable: false
-          });
+        channel.assertQueue(
+            queueName, 
+            { durable: false }
+        );
 
-          console.log("Waiting for messages in %s.", api);
+        console.log("Waiting for messages in %s.", api);
 
-          channel.consume(api, function(msg) {
-            console.log("%s received %s", api, msg.content.toString());
-
-            const url = serverUrl + '/' + api;
+        channel.consume(queueName, function(msg) {
             const data = JSON.parse(msg.content.toString());
+            console.log("%s received %s", queueName, data);
 
-            axios.post(url, data)
-              .then(response => {
-                  console.log('Success', url, response.data);
-              })
-              .catch(error => {
-                  console.error('Error during API call', error);
-              });
-
-          }, {
-              noAck: true
-          });
-        }
+            const url = serverUrl + '/' + data['api'];
+            axios.post(url, data['params'])
+                .then(response => {
+                    console.log('Success', url, response.data);
+                })
+                .catch(error => {
+                    console.error('Error', url, error);
+                });
+            }, 
+            {
+                noAck: true
+            }
+        );
     });
 });

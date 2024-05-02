@@ -4,25 +4,31 @@ const express = require('express');
 const amqp = require('amqplib');
 const bodyParser = require('body-parser');
 
-const app = express();
-const port = 8080;
+const port = process.env.GATEWAY_PORT || 8080;
+const amqpUrl = process.env.AMQP_URL || 'amqp://localhost'
+const queueName = process.env.QUEUE_NAME || 'api'
 
-// Middleware to parse JSON bodies
+const app = express();
 app.use(bodyParser.json());
 
 async function sendMessage(
-  api,
-  params,
+  apiParams,
 ) {
   try {
-    const amqpUrl = process.env.AMQP_URL 
     const connection = await amqp.connect(amqpUrl);
     const channel = await connection.createChannel();
 
-    await channel.assertQueue(api, { durable: false });
-    channel.sendToQueue(api, Buffer.from(JSON.stringify(params)));
+    await channel.assertQueue(
+      queueName, 
+      { durable: false }
+    );
 
-    console.log(`Queued api: ${api} params: ${JSON.stringify(params)}`);
+    channel.sendToQueue( 
+      queueName, 
+      Buffer.from(JSON.stringify(apiParams))
+    );
+
+    console.log(`Queued api: ${apiParams.api} with params: ${JSON.stringify(apiParams.params)}`);
   } catch (error) {
     console.error('Error:', error);
   }
@@ -40,8 +46,7 @@ app.post('/api', async (req, res) => {
   }
 
   await sendMessage(
-    req.body.api,
-    req.body.params,
+    req.body
   );
 
   res.json({ 

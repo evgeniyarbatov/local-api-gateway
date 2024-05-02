@@ -13,3 +13,7 @@ variable "rabbbitmq_port" {
 variable "key_name" {
   default = "terraform"
 }
+
+variable "local_rabbitmq_name" {
+  default = "rabbitmq-local"
+}
