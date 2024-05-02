@@ -25,7 +25,7 @@ amqp.connect(amqpUrl, function(error0, connection) {
             { durable: false }
         );
 
-        console.log("Waiting for messages in %s.", api);
+        console.log("Waiting for messages in %s.", queueName);
 
         channel.consume(queueName, function(msg) {
             const data = JSON.parse(msg.content.toString());
