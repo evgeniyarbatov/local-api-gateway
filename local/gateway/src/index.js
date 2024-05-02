@@ -18,10 +18,7 @@ async function sendMessage(
     const connection = await amqp.connect(amqpUrl);
     const channel = await connection.createChannel();
 
-    await channel.assertQueue(
-      queueName, 
-      { durable: false }
-    );
+    await channel.assertQueue(queueName);
 
     channel.sendToQueue( 
       queueName, 

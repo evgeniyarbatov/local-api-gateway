@@ -20,10 +20,7 @@ amqp.connect(amqpUrl, function(error0, connection) {
             throw error1;
         }
 
-        channel.assertQueue(
-            queueName, 
-            { durable: false }
-        );
+        channel.assertQueue(queueName);
 
         console.log("Waiting for messages in %s.", queueName);
 

@@ -8,7 +8,6 @@ resource "aws_instance" "api-server" {
     "init-script.tftpl",
     {
       compose = file("${path.module}/../docker-compose.yaml"),
-      env     = file("${path.module}/../.env")
     }
   )
 
