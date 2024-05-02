@@ -8,7 +8,7 @@ resource "aws_instance" "api-server" {
     "init-script.tftpl",
     {
       compose = file("${path.module}/../docker-compose.yaml"),
-      env = file("${path.module}/../.env")
+      env     = file("${path.module}/../.env")
     }
   )
 
@@ -24,29 +24,16 @@ resource "null_resource" "rabbitmq-shovel" {
 
   provisioner "local-exec" {
     command     = <<-EOT
-      docker exec -it ${var.local_rabbitmq_name} rabbitmq-plugins enable rabbitmq_shovel rabbitmq_shovel_management
-      docker exec -it ${var.local_rabbitmq_name} \
-        rabbitmqctl set_parameter shovel log-shovel \
+      docker exec ${var.local_rabbitmq_name} rabbitmq-plugins enable rabbitmq_shovel rabbitmq_shovel_management
+      docker exec ${var.local_rabbitmq_name} \
+        rabbitmqctl set_parameter shovel ${var.rabbitmq_queue_name}-shovel \
         '{
           "src-protocol": "amqp091",
           "src-uri": "amqp://",
-          "src-queue": "log",
+          "src-queue": "${var.rabbitmq_queue_name}",
           "dest-protocol": "amqp091",
           "dest-uri": "amqp://${aws_instance.api-server.public_ip}",
-          "dest-queue": "log",
-          "dest-queue-args": {
-            "x-queue-type": "quorum"
-          }
-        }'
-      docker exec -it ${var.local_rabbitmq_name} \
-        rabbitmqctl set_parameter shovel purchase-shovel \
-        '{
-          "src-protocol": "amqp091",
-          "src-uri": "amqp://",
-          "src-queue": "purchase",
-          "dest-protocol": "amqp091",
-          "dest-uri": "amqp://${aws_instance.api-server.public_ip}",
-          "dest-queue": "purchase",
+          "dest-queue": "${var.rabbitmq_queue_name}",
           "dest-queue-args": {
             "x-queue-type": "quorum"
           }

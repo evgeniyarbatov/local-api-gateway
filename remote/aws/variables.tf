@@ -17,3 +17,7 @@ variable "key_name" {
 variable "local_rabbitmq_name" {
   default = "rabbitmq-local"
 }
+
+variable "rabbitmq_queue_name" {
+  default = "api"
+}
