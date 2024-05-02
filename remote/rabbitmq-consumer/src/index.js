@@ -1,4 +1,5 @@
 require('dotenv').config();
+const axios = require('axios');
 
 const amqp = require('amqplib/callback_api');
 
@@ -22,7 +23,7 @@ amqp.connect(amqpUrl, function(error0, connection) {
             console.log("Failed to create channel to %s. Error: %s", channel, error1);
             throw error1;
         }
-        console.log("Created channel %s", channel);
+        console.log("Created channel");
 
         for (const api of apis) {
           channel.assertQueue(api, {

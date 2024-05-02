@@ -19,7 +19,7 @@ async function sendMessage(
     const connection = await amqp.connect(amqpUrl);
     const channel = await connection.createChannel();
 
-    await channel.assertQueue(api, { durable: true });
+    await channel.assertQueue(api, { durable: false });
     channel.sendToQueue(api, Buffer.from(JSON.stringify(params)));
 
     console.log(`Queued api: ${api} params: ${JSON.stringify(params)}`);

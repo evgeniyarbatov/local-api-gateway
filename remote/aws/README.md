@@ -17,11 +17,3 @@ Update:
 ```
 tf apply -auto-approve
 ```
-
-## RabbitMQ
-
-List queues
-
-```
-sudo docker exec -it rabbitmq-remote rabbitmqctl list_queues
-```
