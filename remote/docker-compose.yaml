@@ -20,8 +20,9 @@ services:
     image: evgenyarbatov/rabbitmq-consumer
     container_name: "rabbitmq-consumer"
     environment:
-        - AMQP_URL=${AMQP_URL}
-        - SERVER_URL=${SERVER_URL}
+      - AMQP_URL=amqp://rabbitmq
+      - SERVER_URL=http://server:9090
+      - QUEUE_NAME=api
     networks:
       - default
     restart: unless-stopped

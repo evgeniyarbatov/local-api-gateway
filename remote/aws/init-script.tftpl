@@ -8,12 +8,7 @@ cat > /home/ubuntu/docker-compose.yaml <<EOF
 ${compose}
 EOF
 
-cat > /home/ubuntu/.env <<EOF
-${env}
-EOF
-
 docker compose \
---env-file /home/ubuntu/.env \
 -f /home/ubuntu/docker-compose.yaml \
 up -d
 

@@ -22,7 +22,9 @@ services:
     ports:
       - 8080:8080 
     environment:
-        - AMQP_URL=${AMQP_URL}
+      - AMQP_URL=amqp://rabbitmq
+      - QUEUE_NAME=api
+      - GATEWAY_PORT=8080
     networks:
       - default
     restart: unless-stopped
