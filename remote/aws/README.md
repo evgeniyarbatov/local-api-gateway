@@ -6,13 +6,7 @@ This creates EC2 instance and runs Docker Compose.
 
 ## Run
 
-First time:
-
-```
-tf init
-```
-
-Update:
+Start local RabbitMQ and apply TF changes:
 
 ```
 tf apply -auto-approve

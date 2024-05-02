@@ -1,6 +1,6 @@
 require('dotenv').config();
-const axios = require('axios');
 
+const axios = require('axios');
 const amqp = require('amqplib/callback_api');
 
 const amqpUrl = process.env.AMQP_URL || 'amqp://localhost'

@@ -12,6 +12,9 @@ cat > /home/ubuntu/.env <<EOF
 ${env}
 EOF
 
-docker compose -f /home/ubuntu/docker-compose.yaml up -d
+docker compose \
+--env-file /home/ubuntu/.env \
+-f /home/ubuntu/docker-compose.yaml \
+up -d
 
 usermod -aG docker ubuntu

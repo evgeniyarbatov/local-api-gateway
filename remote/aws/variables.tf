@@ -3,7 +3,7 @@ variable "aws_region" {
 }
 
 variable "instance_type" {
-  default = "t2.nano"
+  default = "t2.micro"
 }
 
 variable "rabbbitmq_port" {
