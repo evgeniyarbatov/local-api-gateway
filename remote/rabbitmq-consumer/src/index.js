@@ -20,7 +20,10 @@ amqp.connect(amqpUrl, function(error0, connection) {
             throw error1;
         }
 
-        channel.assertQueue(queueName);
+        channel.assertQueue(
+            queueName,
+            { arguments: { 'x-queue-type': 'quorum' } },
+        );
 
         console.log("Waiting for messages in %s.", queueName);
 
